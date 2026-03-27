@@ -1,9 +1,9 @@
 User-agent: *
 Allow: /index.html
 Allow: /$
+Allow: /images/
 Disallow: /css/
 Disallow: /js/
-Disallow: /images/
 Disallow: /assets/
 Disallow: /docs/
 
