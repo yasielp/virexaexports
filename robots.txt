@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /index.html
+Allow: /$
+Disallow: /css/
+Disallow: /js/
+Disallow: /images/
+Disallow: /assets/
+Disallow: /docs/
+
+Sitemap: https://www.virexaexports.com/sitemap.xml
