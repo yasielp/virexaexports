@@ -120,8 +120,8 @@
     <div class="hero-video-wrap">
       <!-- Fallback gradient when no video -->
       <div class="hero-video-fallback"></div>
-      <video autoplay muted loop playsinline class="hero-video" aria-hidden="true">
-        <source src="assets/hero-video.mp4" type="video/mp4" />
+      <video autoplay muted loop playsinline preload="none" class="hero-video" aria-hidden="true">
+        <source data-src="assets/hero-video.mp4" type="video/mp4" />
       </video>
       <div class="hero-overlay"></div>
     </div>
@@ -470,8 +470,8 @@
       <div class="blog-grid">
         <article class="blog-card blog-card--featured">
           <div class="blog-video-wrap">
-            <video autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;">
-              <source src="https://videos.pexels.com/video-files/30281178/12980614_2560_1440_60fps.mp4" type="video/mp4" />
+            <video autoplay muted loop playsinline preload="none" data-lazy style="width:100%;height:100%;object-fit:cover;">
+              <source data-src="https://videos.pexels.com/video-files/30281178/12980614_2560_1440_60fps.mp4" type="video/mp4" />
             </video>
           </div>
           <div class="blog-content">
@@ -533,8 +533,8 @@
   <section id="ceo" class="section-dark" aria-labelledby="ceo-title">
     <div class="container ceo-grid">
       <div class="ceo-video-wrap">
-        <video autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;border-radius:var(--radius-lg);">
-          <source src="https://videos.pexels.com/video-files/7947461/7947461-hd_1920_1080_30fps.mp4" type="video/mp4" />
+        <video autoplay muted loop playsinline preload="none" data-lazy style="width:100%;height:100%;object-fit:cover;border-radius:var(--radius-lg);">
+          <source data-src="https://videos.pexels.com/video-files/7947461/7947461-hd_1920_1080_30fps.mp4" type="video/mp4" />
         </video>
       </div>
       <div class="ceo-content">

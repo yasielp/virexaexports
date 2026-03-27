@@ -585,14 +585,13 @@ section {
   color: rgba(255, 255, 255, 0.85);
   margin-bottom: 12px;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 10px;
   font-size: 1.05rem;
 }
 
 .hero-bullets li i {
   color: var(--gold);
-  margin-top: 4px;
   flex-shrink: 0;
   font-size: 0.8rem;
 }

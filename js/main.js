@@ -4,6 +4,40 @@
 
 "use strict";
 
+// ===== LAZY VIDEO LOADING =====
+function loadLazyVideo(videoEl) {
+  const source = videoEl.querySelector("source[data-src]");
+  if (!source || source.src) return; // already loaded
+  source.src = source.dataset.src;
+  videoEl.load();
+  videoEl.play().catch(function () {}); // ignore autoplay policy blocks
+}
+
+// Hero video: defer until after full page load to not block LCP
+window.addEventListener("load", function () {
+  var heroVideo = document.querySelector(".hero-video");
+  if (heroVideo) loadLazyVideo(heroVideo);
+});
+
+// Below-fold videos: load only when scrolled into view
+var lazyVideos = document.querySelectorAll("video[data-lazy]");
+if (lazyVideos.length > 0 && "IntersectionObserver" in window) {
+  var videoObserver = new IntersectionObserver(
+    function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          loadLazyVideo(entry.target);
+          videoObserver.unobserve(entry.target);
+        }
+      });
+    },
+    { rootMargin: "200px" },
+  );
+  lazyVideos.forEach(function (v) {
+    videoObserver.observe(v);
+  });
+}
+
 // ===== LANGUAGE SYSTEM =====
 const translations = {};
 let currentLang = localStorage.getItem("virexaLang") || "es";
