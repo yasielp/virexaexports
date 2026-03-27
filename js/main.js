@@ -4,20 +4,15 @@
 
 "use strict";
 
-// ===== LAZY VIDEO LOADING =====
+// ===== LAZY VIDEO LOADING (below-fold videos only) =====
 function loadLazyVideo(videoEl) {
   const source = videoEl.querySelector("source[data-src]");
-  if (!source || source.src) return; // already loaded
-  source.src = source.dataset.src;
+  if (!source) return;
+  source.setAttribute("src", source.dataset.src);
+  source.removeAttribute("data-src");
   videoEl.load();
-  videoEl.play().catch(function () {}); // ignore autoplay policy blocks
+  videoEl.play().catch(function () {});
 }
-
-// Hero video: defer until after full page load to not block LCP
-window.addEventListener("load", function () {
-  var heroVideo = document.querySelector(".hero-video");
-  if (heroVideo) loadLazyVideo(heroVideo);
-});
 
 // Below-fold videos: load only when scrolled into view
 var lazyVideos = document.querySelectorAll("video[data-lazy]");
