@@ -982,7 +982,8 @@ section {
   border-color: var(--gold);
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
+  text-align: center;
 }
 
 .product-card--cta h3 {
