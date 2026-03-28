@@ -41,6 +41,10 @@ function setLang(lang) {
   currentLang = lang;
   localStorage.setItem("virexaLang", lang);
 
+  // Sincronizar el campo oculto del formulario de contacto
+  const langInput = document.getElementById("form-lang");
+  if (langInput) langInput.value = lang;
+
   // Update lang buttons
   document.querySelectorAll(".lang-btn").forEach((btn) => {
     btn.classList.toggle("active", btn.dataset.lang === lang);
@@ -274,26 +278,88 @@ function initContactForm() {
     const submitBtn = form.querySelector('[type="submit"]');
     const originalText = submitBtn.innerHTML;
     submitBtn.disabled = true;
+    submitBtn.classList.add("btn--loading");
     submitBtn.innerHTML =
-      '<i class="fa-solid fa-spinner fa-spin"></i> Enviando...';
+      '<i class="fa-solid fa-circle-notch fa-spin"></i> Enviando...';
 
-    // Simulate form submission (replace with actual endpoint)
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    // Enviar datos al script PHP
+    try {
+      const formData = new FormData(form);
+      formData.set("lang", currentLang);
 
-    // Show success
-    form.reset();
-    successMsg.hidden = false;
+      // Enviar el texto visible del interés según el idioma activo
+      const interestSelect = form.querySelector("#interest");
+      if (interestSelect && interestSelect.selectedIndex > 0) {
+        const selectedOption =
+          interestSelect.options[interestSelect.selectedIndex];
+        const interestText =
+          selectedOption.getAttribute(`data-${currentLang}`) ||
+          selectedOption.textContent.trim();
+        formData.set("interest", interestText);
+      }
+
+      const response = await fetch("php/sendMail.php", {
+        method: "POST",
+        body: formData,
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        form.reset();
+        successMsg.hidden = false;
+        successMsg.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        setTimeout(() => {
+          successMsg.hidden = true;
+        }, 6000);
+      } else {
+        alert(
+          result.message || "No se pudo enviar el mensaje. Inténtelo de nuevo.",
+        );
+      }
+    } catch {
+      alert("Error de conexión. Verifique su red e inténtelo de nuevo.");
+    }
+
     submitBtn.disabled = false;
+    submitBtn.classList.remove("btn--loading");
     submitBtn.innerHTML = originalText;
-
-    // Scroll to success message
-    successMsg.scrollIntoView({ behavior: "smooth", block: "nearest" });
-
-    // Hide success after 6s
-    setTimeout(() => {
-      successMsg.hidden = true;
-    }, 6000);
   });
+
+  // Formateo automático del teléfono según país (libphonenumber-js)
+  const phoneField = form.querySelector("#phone");
+  if (phoneField && typeof libphonenumber !== "undefined") {
+    phoneField.addEventListener("input", () => {
+      const digits = phoneField.value.replace(/\D/g, "");
+      if (!digits) {
+        phoneField.value = "";
+        return;
+      }
+      const formatted = new libphonenumber.AsYouType().input("+" + digits);
+      phoneField.value = formatted.startsWith("+")
+        ? formatted.slice(1)
+        : formatted;
+    });
+    phoneField.addEventListener("keydown", (e) => {
+      const allowed = [
+        "Backspace",
+        "Delete",
+        "ArrowLeft",
+        "ArrowRight",
+        "Tab",
+        "Home",
+        "End",
+      ];
+      if (!allowed.includes(e.key) && !/^\d$/.test(e.key)) {
+        e.preventDefault();
+      }
+    });
+  } else if (phoneField) {
+    // Fallback si la librería no carga
+    phoneField.addEventListener("input", () => {
+      phoneField.value = phoneField.value.replace(/[^\d\s\-]/g, "");
+    });
+  }
 
   // Clear error state on input
   form.querySelectorAll("input, select, textarea").forEach((field) => {
