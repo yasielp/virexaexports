@@ -2851,6 +2851,7 @@ section {
   justify-content: center;
   padding: 20px;
   animation: fadeIn 0.2s ease;
+  outline: none;
 }
 
 .lightbox-inner {

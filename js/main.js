@@ -413,6 +413,7 @@ function initGallery() {
     overlay.className = "lightbox-overlay";
     overlay.setAttribute("role", "dialog");
     overlay.setAttribute("aria-modal", "true");
+    overlay.setAttribute("tabindex", "-1");
     overlay.innerHTML = `
       <div class="lightbox-inner">
         <button class="lightbox-close" aria-label="Cerrar">✕</button>
@@ -426,6 +427,7 @@ function initGallery() {
 
     document.body.appendChild(overlay);
     document.body.style.overflow = "hidden";
+    overlay.focus();
     updateLightbox(index);
 
     const close = () => {
@@ -449,11 +451,17 @@ function initGallery() {
     });
 
     kbHandler = (e) => {
-      if (e.key === "Escape") close();
-      if (e.key === "ArrowLeft" && currentIndex > 0)
-        updateLightbox(currentIndex - 1);
-      if (e.key === "ArrowRight" && currentIndex < items.length - 1)
-        updateLightbox(currentIndex + 1);
+      if (e.key === "Escape") {
+        close();
+        return;
+      }
+      if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
+        e.preventDefault();
+        if (e.key === "ArrowLeft" && currentIndex > 0)
+          updateLightbox(currentIndex - 1);
+        if (e.key === "ArrowRight" && currentIndex < items.length - 1)
+          updateLightbox(currentIndex + 1);
+      }
     };
     document.addEventListener("keydown", kbHandler);
   }
