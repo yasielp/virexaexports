@@ -7,9 +7,9 @@ declare(strict_types=1);
 // ============================================================
 const SMTP_HOST     = 'smtp.office365.com';
 const SMTP_PORT     = 587;
-const SMTP_USERNAME = 'report@unicofreight.com';   // Cuenta Outlook que envía
-const SMTP_PASSWORD = 'jbsqxpfnbfdfvzzj';         // Contraseña o App Password
-const MAIL_FROM     = 'report@unicofreight.com';   // Mismo que SMTP_USERNAME
+const SMTP_USERNAME = 'info@virexaexports.com';   // Cuenta Outlook que envía
+const SMTP_PASSWORD = '';         // Contraseña o App Password
+const MAIL_FROM     = 'info@virexaexports.com';   // Mismo que SMTP_USERNAME
 const MAIL_FROM_NAME = 'Virexa Contact Form'; // Nombre que verá el destinatario
 const MAIL_TO       = 'info@weprovideillusion.com'; // Destinatario final
 // ============================================================
