@@ -415,14 +415,14 @@ function initGallery() {
     overlay.setAttribute("aria-modal", "true");
     overlay.setAttribute("tabindex", "-1");
     overlay.innerHTML = `
+      <button class="lightbox-close" aria-label="Cerrar">✕</button>
+      <button class="lightbox-prev" aria-label="Anterior">&#8592;</button>
       <div class="lightbox-inner">
-        <button class="lightbox-close" aria-label="Cerrar">✕</button>
-        <button class="lightbox-prev" aria-label="Anterior">&#8592;</button>
         <img class="lightbox-img" src="${img.src}" alt="${img.alt}" />
-        <button class="lightbox-next" aria-label="Siguiente">&#8594;</button>
-        <p class="lightbox-caption">${caption || ""}</p>
-        <span class="lightbox-counter">${index + 1} / ${items.length}</span>
       </div>
+      <button class="lightbox-next" aria-label="Siguiente">&#8594;</button>
+      <p class="lightbox-caption">${caption || ""}</p>
+      <span class="lightbox-counter">${index + 1} / ${items.length}</span>
     `;
 
     document.body.appendChild(overlay);

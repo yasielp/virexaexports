@@ -2850,7 +2850,6 @@ section {
   align-items: center;
   justify-content: center;
   padding: 20px;
-  animation: fadeIn 0.2s ease;
   outline: none;
 }
 
@@ -2899,34 +2898,34 @@ section {
   position: fixed;
   top: 50%;
   transform: translateY(-50%);
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.15);
   border: none;
   color: #fff;
   font-size: 2rem;
-  width: 52px;
-  height: 52px;
+  width: 56px;
+  height: 56px;
   border-radius: 50%;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: background 0.2s;
-  z-index: 10001;
+  z-index: 10002;
   user-select: none;
 }
 .lightbox-prev {
-  left: 16px;
+  left: 12px;
 }
 .lightbox-next {
-  right: 16px;
+  right: 12px;
 }
 .lightbox-prev:hover,
 .lightbox-next:hover {
-  background: rgba(255, 255, 255, 0.28);
+  background: rgba(255, 255, 255, 0.32);
 }
 
 .lightbox-caption {
-  position: fixed;
+  position: absolute;
   bottom: 24px;
   left: 50%;
   transform: translateX(-50%);
