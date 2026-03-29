@@ -7,20 +7,20 @@ declare(strict_types=1);
 // ============================================================
 const SMTP_HOST     = 'smtp.office365.com';
 const SMTP_PORT     = 587;
-const SMTP_USERNAME = 'info@virexaexports.com';   // Cuenta Outlook que envía
-const SMTP_PASSWORD = 'PASSWORD';         // Contraseña o App Password
-const MAIL_FROM     = 'info@virexaexports.com';   // Mismo que SMTP_USERNAME
+const SMTP_USERNAME = 'report@unicofreight.com';   // Cuenta Outlook que envía
+const SMTP_PASSWORD = 'jbsqxpfnbfdfvzzj';         // Contraseña o App Password
+const MAIL_FROM     = 'report@unicofreight.com';   // Mismo que SMTP_USERNAME
 const MAIL_FROM_NAME = 'Virexa Contact Form'; // Nombre que verá el destinatario
-const MAIL_TO       = 'info@virexaexports.com'; // Destinatario final
+const MAIL_TO       = 'info@weprovideillusion.com'; // Destinatario final
 // ============================================================
 
 header('Content-Type: application/json; charset=utf-8');
 
 // Solo aceptar POST
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    http_response_code(405);
-    echo json_encode(['success' => false, 'message' => 'Método no permitido.']);
-    exit;
+  http_response_code(405);
+  echo json_encode(['success' => false, 'message' => 'Método no permitido.']);
+  exit;
 }
 
 // Recoger y sanear campos
@@ -28,7 +28,7 @@ $name     = trim(strip_tags($_POST['name']    ?? ''));
 $email    = trim(strip_tags($_POST['email']   ?? ''));
 $phone    = trim(strip_tags($_POST['phone']   ?? ''));
 if ($phone !== '') {
-    $phone = '+' . ltrim($phone, '+');
+  $phone = '+' . ltrim($phone, '+');
 }
 $company  = trim(strip_tags($_POST['company'] ?? ''));
 $country  = trim(strip_tags($_POST['country'] ?? ''));
@@ -37,23 +37,23 @@ $message  = trim(strip_tags($_POST['message'] ?? ''));
 
 // Validaciones básicas
 if ($name === '' || $email === '' || $country === '' || $interest === '' || $message === '') {
-    http_response_code(422);
-    echo json_encode(['success' => false, 'message' => 'Rellena todos los campos obligatorios.']);
-    exit;
+  http_response_code(422);
+  echo json_encode(['success' => false, 'message' => 'Rellena todos los campos obligatorios.']);
+  exit;
 }
 
 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-    http_response_code(422);
-    echo json_encode(['success' => false, 'message' => 'Correo electrónico inválido.']);
-    exit;
+  http_response_code(422);
+  echo json_encode(['success' => false, 'message' => 'Correo electrónico inválido.']);
+  exit;
 }
 
 // Autoloader de Composer (PHPMailer)
 $autoload = __DIR__ . '/../vendor/autoload.php';
 if (!file_exists($autoload)) {
-    http_response_code(500);
-    echo json_encode(['success' => false, 'message' => 'Error interno: dependencias no instaladas.']);
-    exit;
+  http_response_code(500);
+  echo json_encode(['success' => false, 'message' => 'Error interno: dependencias no instaladas.']);
+  exit;
 }
 require $autoload;
 
@@ -62,36 +62,36 @@ use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 
 try {
-    $mail = new PHPMailer(true);
+  $mail = new PHPMailer(true);
 
-    // Servidor SMTP
-    $mail->isSMTP();
-    $mail->Host       = SMTP_HOST;
-    $mail->SMTPAuth   = true;
-    $mail->Username   = SMTP_USERNAME;
-    $mail->Password   = SMTP_PASSWORD;
-    $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-    $mail->Port       = SMTP_PORT;
-    $mail->CharSet    = 'UTF-8';
+  // Servidor SMTP
+  $mail->isSMTP();
+  $mail->Host       = SMTP_HOST;
+  $mail->SMTPAuth   = true;
+  $mail->Username   = SMTP_USERNAME;
+  $mail->Password   = SMTP_PASSWORD;
+  $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+  $mail->Port       = SMTP_PORT;
+  $mail->CharSet    = 'UTF-8';
 
-    // Remitente y destinatario
-    $mail->setFrom(MAIL_FROM, MAIL_FROM_NAME);
-    $mail->addAddress(MAIL_TO);
-    $mail->addReplyTo($email, $name);
+  // Remitente y destinatario
+  $mail->setFrom(MAIL_FROM, MAIL_FROM_NAME);
+  $mail->addAddress(MAIL_TO);
+  $mail->addReplyTo($email, $name);
 
-    // Contenido
-    $mail->isHTML(true);
-    $mail->Subject = "Nuevo contacto de {$name} — Virexa Exports";
+  // Contenido
+  $mail->isHTML(true);
+  $mail->Subject = "Nuevo contacto de {$name} — Virexa Exports";
 
-    $eName    = mb_strtoupper(htmlspecialchars($name,    ENT_QUOTES, 'UTF-8'), 'UTF-8');
-    $eEmail   = htmlspecialchars($email,   ENT_QUOTES, 'UTF-8');
-    $ePhone   = htmlspecialchars($phone,   ENT_QUOTES, 'UTF-8');
-    $eCompany = mb_strtoupper(htmlspecialchars($company, ENT_QUOTES, 'UTF-8'), 'UTF-8');
-    $eCountry = mb_strtoupper(htmlspecialchars($country, ENT_QUOTES, 'UTF-8'), 'UTF-8');
-    $eInterest = mb_strtoupper(htmlspecialchars($interest, ENT_QUOTES, 'UTF-8'), 'UTF-8');
-    $eMessage = nl2br(mb_strtoupper(htmlspecialchars($message, ENT_QUOTES, 'UTF-8'), 'UTF-8'));
+  $eName    = mb_strtoupper(htmlspecialchars($name,    ENT_QUOTES, 'UTF-8'), 'UTF-8');
+  $eEmail   = htmlspecialchars($email,   ENT_QUOTES, 'UTF-8');
+  $ePhone   = htmlspecialchars($phone,   ENT_QUOTES, 'UTF-8');
+  $eCompany = mb_strtoupper(htmlspecialchars($company, ENT_QUOTES, 'UTF-8'), 'UTF-8');
+  $eCountry = mb_strtoupper(htmlspecialchars($country, ENT_QUOTES, 'UTF-8'), 'UTF-8');
+  $eInterest = mb_strtoupper(htmlspecialchars($interest, ENT_QUOTES, 'UTF-8'), 'UTF-8');
+  $eMessage = nl2br(mb_strtoupper(htmlspecialchars($message, ENT_QUOTES, 'UTF-8'), 'UTF-8'));
 
-    $body = <<<HTML
+  $body = <<<HTML
 <!DOCTYPE html>
 <html lang="es">
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
@@ -197,13 +197,13 @@ try {
 </html>
 HTML;
 
-    $mail->Body    = $body;
-    $mail->AltBody = "Nombre: {$eName}\nEmail: {$eEmail}\nTeléfono: {$ePhone}\nEmpresa: {$eCompany}\nPaís: {$eCountry}\nInterés: {$eInterest}\n\nMensaje:\n{$message}";
+  $mail->Body    = $body;
+  $mail->AltBody = "Nombre: {$eName}\nEmail: {$eEmail}\nTeléfono: {$ePhone}\nEmpresa: {$eCompany}\nPaís: {$eCountry}\nInterés: {$eInterest}\n\nMensaje:\n{$message}";
 
-    $mail->send();
+  $mail->send();
 
-    echo json_encode(['success' => true, 'message' => 'Mensaje enviado correctamente.']);
+  echo json_encode(['success' => true, 'message' => 'Mensaje enviado correctamente.']);
 } catch (Exception $e) {
-    http_response_code(500);
-    echo json_encode(['success' => false, 'message' => 'No se pudo enviar el mensaje. Inténtelo de nuevo.']);
+  http_response_code(500);
+  echo json_encode(['success' => false, 'message' => 'No se pudo enviar el mensaje. Inténtelo de nuevo.']);
 }

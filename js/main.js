@@ -369,56 +369,102 @@ function initContactForm() {
   });
 }
 
-// ===== GALLERY LIGHTBOX (simple) =====
+// ===== GALLERY LIGHTBOX (with navigation) =====
 function initGallery() {
-  const items = document.querySelectorAll(".gallery-item");
+  const items = Array.from(document.querySelectorAll(".gallery-item")).filter(
+    (item) =>
+      item.querySelector("img") &&
+      !item.classList.contains("img-placeholder-dark"),
+  );
 
-  items.forEach((item) => {
-    item.addEventListener("click", () => {
-      const img = item.querySelector("img");
-      const caption =
-        currentLang === "es" ? item.dataset.captionEs : item.dataset.captionEn;
+  let currentIndex = 0;
+  let overlay = null;
+  let kbHandler = null;
 
-      if (!img || item.classList.contains("img-placeholder-dark")) return;
+  function getCaption(item) {
+    return currentLang === "es"
+      ? item.dataset.captionEs
+      : item.dataset.captionEn;
+  }
 
-      const overlay = document.createElement("div");
-      overlay.className = "lightbox-overlay";
-      overlay.setAttribute("role", "dialog");
-      overlay.setAttribute("aria-modal", "true");
-      overlay.innerHTML = `
-        <div class="lightbox-inner">
-          <button class="lightbox-close" aria-label="Cerrar">✕</button>
-          <img src="${img.src}" alt="${img.alt}" />
-          ${caption ? `<p class="lightbox-caption">${caption}</p>` : ""}
-        </div>
-      `;
+  function updateLightbox(index) {
+    currentIndex = index;
+    const item = items[index];
+    const img = item.querySelector("img");
+    const caption = getCaption(item);
+    overlay.querySelector(".lightbox-img").src = img.src;
+    overlay.querySelector(".lightbox-img").alt = img.alt;
+    const cap = overlay.querySelector(".lightbox-caption");
+    if (cap) cap.textContent = caption || "";
+    overlay.querySelector(".lightbox-prev").style.visibility =
+      index === 0 ? "hidden" : "visible";
+    overlay.querySelector(".lightbox-next").style.visibility =
+      index === items.length - 1 ? "hidden" : "visible";
+    overlay.querySelector(".lightbox-counter").textContent =
+      `${index + 1} / ${items.length}`;
+  }
 
-      document.body.appendChild(overlay);
-      document.body.style.overflow = "hidden";
+  function openLightbox(index) {
+    const item = items[index];
+    const img = item.querySelector("img");
+    const caption = getCaption(item);
 
-      const close = () => {
-        overlay.remove();
-        document.body.style.overflow = "";
-      };
+    overlay = document.createElement("div");
+    overlay.className = "lightbox-overlay";
+    overlay.setAttribute("role", "dialog");
+    overlay.setAttribute("aria-modal", "true");
+    overlay.innerHTML = `
+      <div class="lightbox-inner">
+        <button class="lightbox-close" aria-label="Cerrar">✕</button>
+        <button class="lightbox-prev" aria-label="Anterior">&#8592;</button>
+        <img class="lightbox-img" src="${img.src}" alt="${img.alt}" />
+        <button class="lightbox-next" aria-label="Siguiente">&#8594;</button>
+        <p class="lightbox-caption">${caption || ""}</p>
+        <span class="lightbox-counter">${index + 1} / ${items.length}</span>
+      </div>
+    `;
 
-      overlay.querySelector(".lightbox-close").addEventListener("click", close);
-      overlay.addEventListener("click", (e) => {
-        if (e.target === overlay) close();
-      });
+    document.body.appendChild(overlay);
+    document.body.style.overflow = "hidden";
+    updateLightbox(index);
 
-      document.addEventListener("keydown", function esc(e) {
-        if (e.key === "Escape") {
-          close();
-          document.removeEventListener("keydown", esc);
-        }
-      });
+    const close = () => {
+      overlay.remove();
+      overlay = null;
+      document.body.style.overflow = "";
+      document.removeEventListener("keydown", kbHandler);
+    };
+
+    overlay.querySelector(".lightbox-close").addEventListener("click", close);
+    overlay.addEventListener("click", (e) => {
+      if (e.target === overlay) close();
+    });
+    overlay.querySelector(".lightbox-prev").addEventListener("click", (e) => {
+      e.stopPropagation();
+      if (currentIndex > 0) updateLightbox(currentIndex - 1);
+    });
+    overlay.querySelector(".lightbox-next").addEventListener("click", (e) => {
+      e.stopPropagation();
+      if (currentIndex < items.length - 1) updateLightbox(currentIndex + 1);
     });
 
+    kbHandler = (e) => {
+      if (e.key === "Escape") close();
+      if (e.key === "ArrowLeft" && currentIndex > 0)
+        updateLightbox(currentIndex - 1);
+      if (e.key === "ArrowRight" && currentIndex < items.length - 1)
+        updateLightbox(currentIndex + 1);
+    };
+    document.addEventListener("keydown", kbHandler);
+  }
+
+  items.forEach((item, index) => {
+    item.addEventListener("click", () => openLightbox(index));
     item.setAttribute("tabindex", "0");
     item.addEventListener("keydown", (e) => {
       if (e.key === "Enter" || e.key === " ") {
         e.preventDefault();
-        item.click();
+        openLightbox(index);
       }
     });
   });
