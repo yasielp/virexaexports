@@ -1,0 +1,50 @@
+Options -Indexes -MultiViews
+DirectoryIndex index.html
+
+# ─── Bloquear archivos sensibles siempre ─────────────────────────────────────
+<FilesMatch "^(\.env.*|composer\.(json|lock)|CNAME)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# ─── Bloquear directorios sensibles ──────────────────────────────────────────
+RedirectMatch 403 ^/vendor(/|$)
+RedirectMatch 403 ^/docs(/|$)
+RedirectMatch 403 ^/php(/|$)
+
+# ─── Lista blanca: solo se permite acceder a estos recursos ──────────────────
+# Todo lo que no coincida quedará bloqueado por el bloque final.
+
+# 1. index.html en la raíz
+<Files "index.html">
+    Order allow,deny
+    Allow from all
+</Files>
+
+# 2. Assets estáticos necesarios para la web (CSS, JS, imágenes, fuentes, etc.)
+<FilesMatch "\.(css|js|webp|jpg|jpeg|png|gif|svg|ico|woff|woff2|ttf|otf|eot|mp4|webm|pdf)$">
+    Order allow,deny
+    Allow from all
+</FilesMatch>
+
+# 3. robots.txt y sitemap (SEO)
+<FilesMatch "^(robots\.txt|sitemap\.xml)$">
+    Order allow,deny
+    Allow from all
+</FilesMatch>
+
+# 4. Endpoint del formulario — solo POST
+<Files "sendMail.php">
+    Order allow,deny
+    Allow from all
+</Files>
+RewriteEngine On
+RewriteCond %{REQUEST_URI} ^/php/sendMail\.php$
+RewriteCond %{REQUEST_METHOD} !^POST$
+RewriteRule ^ - [F,L]
+
+# ─── Bloquear cualquier otro archivo no listado arriba ───────────────────────
+<FilesMatch "\.php$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
