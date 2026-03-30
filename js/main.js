@@ -592,6 +592,57 @@ function injectLightboxStyles() {
 }
 
 // ===== INIT =====
+// ===== VIDEO MODAL =====
+function initVideoModal() {
+  const triggers = document.querySelectorAll(".blog-video-clickable");
+  triggers.forEach(function (trigger) {
+    trigger.addEventListener("click", openVideoModal);
+    trigger.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        openVideoModal.call(trigger);
+      }
+    });
+  });
+
+  function openVideoModal() {
+    const src = this.dataset.videoSrc;
+    const overlay = document.createElement("div");
+    overlay.className = "video-modal-overlay";
+    overlay.setAttribute("role", "dialog");
+    overlay.setAttribute("aria-modal", "true");
+    overlay.innerHTML = `
+      <div class="video-modal-inner">
+        <button class="video-modal-close" aria-label="Cerrar">✕</button>
+        <video src="${src}" controls autoplay playsinline style="width:100%;max-height:80vh;outline:none;"></video>
+      </div>
+    `;
+    document.body.appendChild(overlay);
+    document.body.style.overflow = "hidden";
+    overlay.querySelector("video").focus();
+
+    const close = () => {
+      const vid = overlay.querySelector("video");
+      vid.pause();
+      overlay.remove();
+      document.body.style.overflow = "";
+    };
+
+    overlay
+      .querySelector(".video-modal-close")
+      .addEventListener("click", close);
+    overlay.addEventListener("click", function (e) {
+      if (e.target === overlay) close();
+    });
+    document.addEventListener("keydown", function escHandler(e) {
+      if (e.key === "Escape") {
+        close();
+        document.removeEventListener("keydown", escHandler);
+      }
+    });
+  }
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   setYear();
   setLang(currentLang);
@@ -601,6 +652,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initGallery();
   initSmoothScroll();
   injectLightboxStyles();
+  initVideoModal();
 
   window.addEventListener("scroll", onScroll, { passive: true });
 
