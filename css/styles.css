@@ -1075,6 +1075,42 @@ section {
   font-weight: 600;
 }
 
+.gallery-hidden {
+  display: none !important;
+}
+
+.gallery-load-more-wrap {
+  display: flex;
+  justify-content: center;
+  margin-top: 36px;
+}
+
+.gallery-load-more {
+  background: transparent;
+  border: 2px solid var(--gold);
+  color: var(--gold);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 12px 40px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition:
+    background var(--transition),
+    color var(--transition);
+}
+
+.gallery-load-more:hover {
+  background: var(--gold);
+  color: var(--black);
+}
+
+.gallery-load-more.hidden {
+  display: none;
+}
+
 .img-placeholder-dark {
   background: linear-gradient(
     135deg,
