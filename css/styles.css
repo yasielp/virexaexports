@@ -1151,6 +1151,13 @@ section {
   gap: 28px;
 }
 
+.blog-grid .blog-card:only-child {
+  grid-column: 1 / -1;
+  justify-self: center;
+  max-width: 380px;
+  width: 100%;
+}
+
 .blog-card {
   background: var(--white);
   border-radius: var(--radius-lg);
@@ -1175,6 +1182,17 @@ section {
   width: 100%;
   aspect-ratio: 16/9;
   overflow: hidden;
+  background: var(--bg-dark);
+}
+
+.blog-reel-wrap {
+  aspect-ratio: 9/16;
+  max-width: 320px;
+  width: 100%;
+  margin: 0 auto;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  position: relative;
   background: var(--bg-dark);
 }
 
