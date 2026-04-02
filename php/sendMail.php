@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-// Capturar cualquier salida anticipada (warnings, notices) para no romper el JSON probando
+// Capturar cualquier salida anticipada (warnings, notices) para no romper el JSON
 ob_start();
 
 // Siempre responder JSON aunque ocurra un error fatal
