@@ -33,23 +33,13 @@ RedirectMatch 403 ^/docs(/|$)
 </FilesMatch>
 
 # 4. Endpoint del formulario — solo POST
-<Files "sendMail.php">
-    Order allow,deny
-    Allow from all
-</Files>
 RewriteEngine On
 RewriteCond %{REQUEST_URI} ^/php/sendMail\.php$
 RewriteCond %{REQUEST_METHOD} !^POST$
 RewriteRule ^ - [F,L]
 
-# 5. Webhook de GitHub — solo POST
-<Files "webhook.php">
-    Order allow,deny
-    Allow from all
-</Files>
-
-# ─── Bloquear cualquier otro archivo no listado arriba ───────────────────────
-<FilesMatch "^(?!(sendMail|webhook)\.php$).*\.php$">
-    Order allow,deny
-    Deny from all
-</FilesMatch>
+# ─── Bloquear cualquier PHP excepto los endpoints autorizados ─────────────────
+RewriteCond %{REQUEST_URI} \.php$
+RewriteCond %{REQUEST_URI} !^/php/sendMail\.php$
+RewriteCond %{REQUEST_URI} !^/webhook\.php$
+RewriteRule ^ - [F,L]
