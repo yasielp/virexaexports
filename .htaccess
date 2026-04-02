@@ -10,7 +10,6 @@ DirectoryIndex index.html
 # ─── Bloquear directorios sensibles ──────────────────────────────────────────
 RedirectMatch 403 ^/vendor(/|$)
 RedirectMatch 403 ^/docs(/|$)
-RedirectMatch 403 ^/php(/|$)
 
 # ─── Lista blanca: solo se permite acceder a estos recursos ──────────────────
 # Todo lo que no coincida quedará bloqueado por el bloque final.
@@ -44,7 +43,7 @@ RewriteCond %{REQUEST_METHOD} !^POST$
 RewriteRule ^ - [F,L]
 
 # ─── Bloquear cualquier otro archivo no listado arriba ───────────────────────
-<FilesMatch "\.php$">
+<FilesMatch "^(?!sendMail\.php$).*\.php$">
     Order allow,deny
     Deny from all
 </FilesMatch>
