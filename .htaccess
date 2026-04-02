@@ -43,7 +43,7 @@ RewriteCond %{REQUEST_METHOD} !^POST$
 RewriteRule ^ - [F,L]
 
 # ─── Bloquear cualquier otro archivo no listado arriba ───────────────────────
-<FilesMatch "\.php$">
+<FilesMatch "^(?!sendMail\.php$).*\.php$">
     Order allow,deny
     Deny from all
 </FilesMatch>
