@@ -42,8 +42,14 @@ RewriteCond %{REQUEST_URI} ^/php/sendMail\.php$
 RewriteCond %{REQUEST_METHOD} !^POST$
 RewriteRule ^ - [F,L]
 
+# 5. Webhook de GitHub — solo POST
+<Files "webhook.php">
+    Order allow,deny
+    Allow from all
+</Files>
+
 # ─── Bloquear cualquier otro archivo no listado arriba ───────────────────────
-<FilesMatch "^(?!sendMail\.php$).*\.php$">
+<FilesMatch "^(?!(sendMail|webhook)\.php$).*\.php$">
     Order allow,deny
     Deny from all
 </FilesMatch>
