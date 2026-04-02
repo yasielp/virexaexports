@@ -2,9 +2,11 @@ User-agent: *
 Allow: /index.html
 Allow: /$
 Allow: /images/
-Disallow: /css/
-Disallow: /js/
-Disallow: /assets/
+Allow: /css/
+Allow: /js/
+Allow: /assets/
 Disallow: /docs/
+Disallow: /php/
+Disallow: /vendor/
 
 Sitemap: https://www.virexaexports.com/sitemap.xml
