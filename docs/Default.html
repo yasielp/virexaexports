@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex" />
+    <title>Sitio en Construcción</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            background-color: #f8f7f2;
+            font-family: 'Open Sans', Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        /* Círculos decorativos de fondo */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -120px;
+            right: -120px;
+            width: 380px;
+            height: 380px;
+            border-radius: 50%;
+            background: rgba(196, 144, 16, 0.18);
+            pointer-events: none;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            bottom: -100px;
+            left: -100px;
+            width: 320px;
+            height: 320px;
+            border-radius: 50%;
+            background: rgba(27, 104, 34, 0.12);
+            pointer-events: none;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 20px;
+            padding: 56px 48px 48px;
+            max-width: 560px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 12px 48px rgba(27, 104, 34, 0.14);
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Ícono de engranaje animado */
+        .icon-wrapper {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 96px;
+            height: 96px;
+            background: rgba(27, 104, 34, 0.12);
+            border-radius: 50%;
+            margin-bottom: 28px;
+        }
+
+        .icon-wrapper svg {
+            width: 52px;
+            height: 52px;
+            animation: spin 6s linear infinite;
+            transform-origin: center;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to   { transform: rotate(360deg); }
+        }
+
+        h1 {
+            font-family: 'Roboto', Arial, sans-serif;
+            font-size: 2rem;
+            font-weight: 900;
+            color: #1b6822;
+            margin-bottom: 12px;
+            line-height: 1.2;
+        }
+
+        p.subtitle {
+            font-size: 1rem;
+            font-weight: 400;
+            color: #1b6822;
+            opacity: 0.75;
+            margin-bottom: 36px;
+            line-height: 1.6;
+        }
+
+        /* Barra de progreso */
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: #1b6822;
+            font-weight: 600;
+            margin-bottom: 8px;
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+        }
+
+        .progress-track {
+            width: 100%;
+            height: 10px;
+            background: rgba(27, 104, 34, 0.12);
+            border-radius: 99px;
+            overflow: hidden;
+            margin-bottom: 36px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #1b6822, #c49010);
+            border-radius: 99px;
+            animation: fillBar 2.4s ease-out forwards;
+        }
+
+        @keyframes fillBar {
+            to { width: 70%; }
+        }
+
+        /* Divisor */
+        .divider {
+            width: 48px;
+            height: 3px;
+            background: #c49010;
+            border-radius: 99px;
+            margin: 0 auto 28px;
+        }
+
+        /* Chips de estado */
+        .chips {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: 99px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            background: rgba(27, 104, 34, 0.10);
+            color: #1b6822;
+        }
+
+        .chip .dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #c49010;
+            display: inline-block;
+            animation: pulse 1.4s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50%       { opacity: 0.4; transform: scale(0.7); }
+        }
+
+        /* Olas inferiores */
+        .waves {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Language toggle */
+        .lang-toggle {
+            position: fixed;
+            top: 20px;
+            right: 24px;
+            z-index: 10;
+            display: flex;
+            background: #fff;
+            border-radius: 99px;
+            box-shadow: 0 4px 16px rgba(27, 104, 34, 0.14);
+            overflow: hidden;
+        }
+
+        .lang-toggle button {
+            border: none;
+            background: transparent;
+            padding: 8px 20px;
+            font-family: 'Open Sans', Arial, sans-serif;
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: #1b6822;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+            border-radius: 99px;
+            letter-spacing: 0.05em;
+        }
+
+        .lang-toggle button.active {
+            background: #1b6822;
+            color: #fff;
+        }
+
+        /* Mostrar/ocultar por idioma con deslizamiento */
+        [data-lang] {
+            display: none;
+        }
+        body[data-curlang="es"] [data-lang="es"],
+        body[data-curlang="en"] [data-lang="en"] {
+            display: revert;
+        }
+
+        /* Animaciones de entrada */
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(28px); }
+            to   { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-28px); }
+            to   { opacity: 1; transform: translateX(0); }
+        }
+        .slide-in-right [data-lang]:not([style*="none"]),
+        body[data-curlang].slide-in-right [data-lang="es"],
+        body[data-curlang].slide-in-right [data-lang="en"] {
+            animation: slideInRight 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+        }
+        .slide-in-left [data-lang]:not([style*="none"]),
+        body[data-curlang].slide-in-left [data-lang="es"],
+        body[data-curlang].slide-in-left [data-lang="en"] {
+            animation: slideInLeft 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+        }
+
+        /* El contenido de la card tiene overflow oculto para cortar el slide */
+        .card {
+            overflow: hidden;
+        }
+
+        @media (max-width: 480px) {
+            .card { padding: 40px 28px 36px; }
+            h1 { font-size: 1.5rem; }
+            .lang-toggle { top: 12px; right: 12px; }
+        }
+    </style>
+</head>
+<body data-curlang="es">
+
+    <div class="lang-toggle">
+        <button id="btn-es" class="active" onclick="setLang('es')">ES</button>
+        <button id="btn-en" onclick="setLang('en')">EN</button>
+    </div>
+
+    <svg class="waves" viewBox="0 0 1440 120" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+        <path fill="rgba(27,104,34,0.10)" d="M0,64 C240,110 480,20 720,64 C960,108 1200,24 1440,64 L1440,120 L0,120 Z"/>
+        <path fill="rgba(196,144,16,0.12)" d="M0,80 C300,40 600,110 900,80 C1100,60 1280,100 1440,80 L1440,120 L0,120 Z"/>
+    </svg>
+
+    <div class="card">
+        <div class="icon-wrapper">
+            <!-- Engranaje -->
+            <svg viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path fill="#1b6822" d="
+                    M26 17a9 9 0 1 0 0 18 9 9 0 0 0 0-18z
+                    M47.2 22.6l-3.6-.8a18.2 18.2 0 0 0-1.7-4l2-3.1a1.5 1.5 0 0 0-.2-1.9l-4.5-4.5a1.5 1.5 0 0 0-1.9-.2l-3.1 2a18.2 18.2 0 0 0-4-1.7l-.8-3.6A1.5 1.5 0 0 0 27.9 4h-6.4a1.5 1.5 0 0 0-1.4 1.1l-.8 3.6a18.2 18.2 0 0 0-4 1.7l-3.1-2a1.5 1.5 0 0 0-1.9.2L5.8 13.1a1.5 1.5 0 0 0-.2 1.9l2 3a18.2 18.2 0 0 0-1.7 4l-3.6.8A1.5 1.5 0 0 0 1 24.2v6.4c0 .7.5 1.3 1.2 1.4l3.6.8a18.2 18.2 0 0 0 1.7 4l-2 3.1a1.5 1.5 0 0 0 .2 1.9l4.5 4.5a1.5 1.5 0 0 0 1.9.2l3.1-2a18.2 18.2 0 0 0 4 1.7l.8 3.6c.2.7.8 1.2 1.5 1.2h6.3c.7 0 1.3-.5 1.4-1.2l.8-3.6a18.2 18.2 0 0 0 4-1.7l3.1 2a1.5 1.5 0 0 0 1.9-.2l4.5-4.5a1.5 1.5 0 0 0 .2-1.9l-2-3.1a18.2 18.2 0 0 0 1.7-4l3.6-.8c.7-.2 1.2-.8 1.2-1.5v-6.3c0-.7-.5-1.3-1.2-1.4z
+                "/>
+            </svg>
+        </div>
+
+        <h1>
+            <span data-lang="es">Sitio en Construcción</span>
+            <span data-lang="en">Under Construction</span>
+        </h1>
+        <p class="subtitle">
+            <span data-lang="es">Estamos trabajando duro para traerte algo increíble.<br>¡Vuelve pronto!</span>
+            <span data-lang="en">We're working hard to bring you something amazing.<br>Check back soon!</span>
+        </p>
+
+        <div class="divider"></div>
+
+        <div class="progress-label">
+            <span>
+                <span data-lang="es">Progreso</span>
+                <span data-lang="en">Progress</span>
+            </span>
+            <span>70%</span>
+        </div>
+        <div class="progress-track">
+            <div class="progress-bar"></div>
+        </div>
+
+        <div class="chips">
+            <span class="chip">
+                <span class="dot"></span>
+                <span data-lang="es">Diseño completado</span>
+                <span data-lang="en">Design completed</span>
+            </span>
+            <span class="chip">
+                <span class="dot"></span>
+                <span data-lang="es">Desarrollo en curso</span>
+                <span data-lang="en">Development in progress</span>
+            </span>
+            <span class="chip">
+                <span class="dot"></span>
+                <span data-lang="es">Próximamente online</span>
+                <span data-lang="en">Coming online soon</span>
+            </span>
+        </div>
+    </div>
+
+    <script>
+        function setLang(lang) {
+            const body = document.body;
+            const current = body.getAttribute('data-curlang');
+            if (current === lang) return;
+
+            // Determinar dirección: es→en = desliza a la izquierda, en→es = desliza a la derecha
+            const goRight = lang === 'es';
+            const animClass = goRight ? 'slide-in-right' : 'slide-in-left';
+
+            body.classList.remove('slide-in-right', 'slide-in-left');
+            // Forzar reflow para reiniciar animación
+            void body.offsetWidth;
+
+            body.setAttribute('data-curlang', lang);
+            body.classList.add(animClass);
+
+            body.addEventListener('animationend', () => {
+                body.classList.remove('slide-in-right', 'slide-in-left');
+            }, { once: true });
+
+            document.getElementById('btn-es').classList.toggle('active', lang === 'es');
+            document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+        }
+    </script>
+
+</body>
+</html>
