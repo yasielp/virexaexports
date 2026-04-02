@@ -2,21 +2,33 @@
 
 declare(strict_types=1);
 
+// Capturar cualquier salida anticipada (warnings, notices) para no romper el JSON
+ob_start();
+
+// Siempre responder JSON aunque ocurra un error fatal
+header('Content-Type: application/json; charset=utf-8');
+
 // Autoloader de Composer (PHPMailer + phpdotenv)
 $autoload = __DIR__ . '/../vendor/autoload.php';
 if (!file_exists($autoload)) {
+  ob_end_clean();
   http_response_code(500);
-  echo json_encode(['success' => false, 'message' => 'Error interno: dependencias no instaladas.']);
+  echo json_encode(['success' => false, 'message' => 'Error interno: dependencias no instaladas. Ejecuta composer install.']);
   exit;
 }
 require $autoload;
 
 // Cargar variables de entorno desde .env (en la raíz del proyecto)
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/..');
-$dotenv->load();
-$dotenv->required(['SMTP_HOST', 'SMTP_PORT', 'SMTP_USERNAME', 'SMTP_PASSWORD', 'MAIL_FROM', 'MAIL_TO']);
-
-header('Content-Type: application/json; charset=utf-8');
+try {
+  $dotenv->load();
+  $dotenv->required(['SMTP_HOST', 'SMTP_PORT', 'SMTP_USERNAME', 'SMTP_PASSWORD', 'MAIL_FROM', 'MAIL_TO']);
+} catch (\Exception $e) {
+  ob_end_clean();
+  http_response_code(500);
+  echo json_encode(['success' => false, 'message' => 'Error de configuración: ' . $e->getMessage()]);
+  exit;
+}
 
 // Solo aceptar POST
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -62,7 +74,9 @@ try {
   $mail->SMTPAuth   = true;
   $mail->Username   = $_ENV['SMTP_USERNAME'];
   $mail->Password   = $_ENV['SMTP_PASSWORD'];
-  $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS; // SSL para puerto 465
+  $mail->SMTPSecure = ((int) $_ENV['SMTP_PORT'] === 465)
+    ? PHPMailer::ENCRYPTION_SMTPS   // SSL  — puerto 465
+    : PHPMailer::ENCRYPTION_STARTTLS; // TLS  — puerto 587
   $mail->Port       = (int) $_ENV['SMTP_PORT'];
   $mail->CharSet    = 'UTF-8';
 
@@ -182,9 +196,11 @@ HTML;
 
   $mail->send();
 
+  ob_end_clean();
   echo json_encode(['success' => true, 'message' => 'Mensaje enviado correctamente.']);
 } catch (Exception $e) {
   error_log('[sendMail] ' . $e->getMessage());
+  ob_end_clean();
   http_response_code(500);
   echo json_encode(['success' => false, 'message' => 'No se pudo enviar el mensaje. Inténtelo de nuevo.', 'debug' => $e->getMessage()]);
 }

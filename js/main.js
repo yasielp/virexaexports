@@ -303,7 +303,15 @@ function initContactForm() {
         body: formData,
       });
 
-      const result = await response.json();
+      let result;
+      const rawText = await response.text();
+      try {
+        result = JSON.parse(rawText);
+      } catch {
+        console.error("[sendMail] Respuesta no-JSON del servidor:", rawText);
+        alert("Error del servidor. Revisa la consola para más detalles.");
+        return;
+      }
 
       if (result.success) {
         form.reset();
@@ -317,8 +325,11 @@ function initContactForm() {
           result.message || "No se pudo enviar el mensaje. Inténtelo de nuevo.",
         );
       }
-    } catch {
-      alert("Error de conexión. Verifique su red e inténtelo de nuevo.");
+    } catch (err) {
+      console.error("[sendMail] Error de red:", err);
+      alert(
+        "Error de conexión. Verifique que el servidor PHP esté activo e inténtelo de nuevo.",
+      );
     }
 
     submitBtn.disabled = false;
