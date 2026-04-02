@@ -2052,7 +2052,7 @@ section {
     gap: 40px;
   }
   .ceo-video-wrap {
-    aspect-ratio: 16/9;
+    aspect-ratio: 3/4;
   }
   .testimonials-grid {
     grid-template-columns: 1fr;
@@ -2088,22 +2088,40 @@ section {
     display: flex;
   }
 
+  #navbar {
+    height: auto;
+    min-height: var(--nav-h);
+    background: rgba(10, 26, 18, 0.99);
+  }
+
+  .nav-inner {
+    flex-wrap: wrap;
+    align-items: center;
+    padding-top: 0;
+    padding-bottom: 0;
+    min-height: var(--nav-h);
+  }
+
   #nav-menu {
-    position: fixed;
-    top: calc(var(--lang-h) + var(--nav-h));
-    left: 0;
-    right: 0;
-    background: rgba(13, 31, 23, 0.98);
-    backdrop-filter: blur(12px);
-    padding: 20px 24px 32px;
-    border-bottom: 3px solid var(--gold);
-    transform: translateY(-120%);
-    transition: transform 0.4s ease;
-    z-index: 999;
+    width: 100%;
+    max-height: 0;
+    overflow: hidden;
+    transition:
+      max-height 0.4s ease,
+      padding 0.4s ease;
+    background: rgba(10, 26, 18, 0.99);
+    padding: 0 8px;
+    border-top: none;
+    position: static;
+    transform: none;
   }
 
   #nav-menu.open {
-    transform: translateY(0);
+    max-height: 600px;
+    padding: 12px 8px 24px;
+    border-top: 1px solid rgba(201, 168, 76, 0.3);
+    border-bottom: 3px solid var(--gold);
+    transform: none;
   }
 
   #nav-menu ul {
@@ -2111,7 +2129,13 @@ section {
     gap: 4px;
   }
 
+  #nav-menu ul li {
+    width: 100%;
+  }
+
   #nav-menu ul li a {
+    display: block;
+    width: 100%;
     padding: 14px 16px;
     border-radius: var(--radius);
     font-size: 1rem;
@@ -2637,7 +2661,6 @@ section {
 }
 
 .ceo-video-wrap {
-  min-height: 320px;
   border-radius: var(--radius);
 }
 

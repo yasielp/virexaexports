@@ -112,14 +112,12 @@ function toggleMenu() {
   const isOpen = navMenu.classList.toggle("open");
   hamburger.classList.toggle("active", isOpen);
   hamburger.setAttribute("aria-expanded", isOpen);
-  document.body.style.overflow = isOpen ? "hidden" : "";
 }
 
 function closeMenu() {
   navMenu.classList.remove("open");
   hamburger.classList.remove("active");
   hamburger.setAttribute("aria-expanded", "false");
-  document.body.style.overflow = "";
 }
 
 // Close menu on outside click
