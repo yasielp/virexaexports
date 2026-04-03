@@ -995,9 +995,10 @@
     // Secuencia de mensajes: [delaySinceLastMs, texto_es, texto_en, tipo, acción]
     // tipo: 'bot' | 'option-contact' | 'option-whatsapp' | 'option-contact'
     var sequence = [
-      { delay: 3000,  type: "bot",             es: "¿Necesitas una cotización para tu importación? 📦",       en: "Need a quote for your import? 📦" },
+      { delay: 3000,  type: "bot",             es: "¿Necesitas una cotización para tu importación? 📦",        en: "Need a quote for your import? 📦" },
       { delay: 1200,  type: "option-contact",  es: "Solicitar cotización →",                                    en: "Request a quote →" },
-      { delay: 5000,  type: "option-whatsapp", es: "Hablar por WhatsApp 💬",                                    en: "Chat on WhatsApp 💬" },
+      { delay: 5000,  type: "bot",             es: "O si prefieres, podemos hablar directamente por WhatsApp 😊", en: "Or if you prefer, we can chat directly on WhatsApp 😊" },
+      { delay: 1500,  type: "option-whatsapp", es: "Hablar por WhatsApp 💬",                                    en: "Chat on WhatsApp 💬" },
       { delay: 6000,  type: "bot",             es: "¿Quieres importar productos a Cuba? 🌴",                    en: "Want to import products to Cuba? 🌴" },
       { delay: 1200,  type: "option-contact",  es: "Importar a Cuba →",                                         en: "Import to Cuba →" },
     ];
