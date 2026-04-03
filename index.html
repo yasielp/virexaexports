@@ -955,6 +955,23 @@
     </div>
   </footer>
 
+  <!-- Chatbot Widget -->
+  <div id="chatbot-widget" aria-live="polite" aria-label="Asistente virtual">
+    <div id="chatbot-bubble" class="chatbot-bubble" onclick="chatbotToggle()" aria-expanded="false" aria-controls="chatbot-messages" title="Asistente virtual">
+      <i class="fa-solid fa-robot chatbot-icon-robot"></i>
+      <i class="fa-solid fa-xmark chatbot-icon-close"></i>
+    </div>
+    <div id="chatbot-messages" class="chatbot-messages" hidden>
+      <div class="chatbot-header">
+        <i class="fa-solid fa-robot"></i>
+        <span data-es="Asistente Virexa" data-en="Virexa Assistant">Asistente Virexa</span>
+      </div>
+      <div id="chatbot-body" class="chatbot-body">
+        <div class="chatbot-msg bot" data-es="¡Hola! ¿En qué puedo ayudarte hoy? 👋" data-en="Hello! How can I help you today? 👋">¡Hola! ¿En qué puedo ayudarte hoy? 👋</div>
+      </div>
+    </div>
+  </div>
+
   <!-- WhatsApp Float Button -->
   <a href="https://wa.me/34622539550" class="whatsapp-float" target="_blank" rel="noopener noreferrer" aria-label="Contactar por WhatsApp">
     <i class="fa-brands fa-whatsapp"></i>
@@ -968,5 +985,145 @@
   <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/libphonenumber-js@1/bundle/libphonenumber-min.js"></script>
   <script src="js/main.js"></script>
+  <script>
+  // ===== CHATBOT WIDGET =====
+  (function () {
+    "use strict";
+
+    var WHATSAPP_NUMBER = "34622539550";
+
+    // Secuencia de mensajes: [delaySinceLastMs, texto_es, texto_en, tipo, acción]
+    // tipo: 'bot' | 'option-contact' | 'option-whatsapp' | 'option-contact'
+    var sequence = [
+      { delay: 3000,  type: "bot",             es: "¿Necesitas una cotización para tu importación? 📦",       en: "Need a quote for your import? 📦" },
+      { delay: 1200,  type: "option-contact",  es: "Solicitar cotización →",                                    en: "Request a quote →" },
+      { delay: 5000,  type: "option-whatsapp", es: "Hablar por WhatsApp 💬",                                    en: "Chat on WhatsApp 💬" },
+      { delay: 6000,  type: "bot",             es: "¿Quieres importar productos a Cuba? 🌴",                    en: "Want to import products to Cuba? 🌴" },
+      { delay: 1200,  type: "option-contact",  es: "Importar a Cuba →",                                         en: "Import to Cuba →" },
+    ];
+
+    var CYCLE_RESTART_DELAY = 18000; // pausa antes de reiniciar el ciclo
+    var widget   = document.getElementById("chatbot-widget");
+    var body     = document.getElementById("chatbot-body");
+    var messages = document.getElementById("chatbot-messages");
+    var bubble   = document.getElementById("chatbot-bubble");
+    var timers   = [];
+    var isOpen   = false;
+    var cycleTimer = null;
+
+    function getLang() {
+      return (window.currentLang || localStorage.getItem("virexaLang") || "es");
+    }
+
+    function addNode(node) {
+      body.appendChild(node);
+      body.scrollTop = body.scrollHeight;
+    }
+
+    function addBotMsg(es, en) {
+      var div = document.createElement("div");
+      div.className = "chatbot-msg bot";
+      div.setAttribute("data-es", es);
+      div.setAttribute("data-en", en);
+      div.textContent = getLang() === "en" ? en : es;
+      addNode(div);
+    }
+
+    function addOption(es, en, type) {
+      var btn = document.createElement("button");
+      btn.className = "chatbot-option" + (type === "option-whatsapp" ? " whatsapp-opt" : "");
+      btn.setAttribute("data-es", es);
+      btn.setAttribute("data-en", en);
+      btn.textContent = getLang() === "en" ? en : es;
+
+      btn.addEventListener("click", function () {
+        if (type === "option-whatsapp") {
+          window.open("https://wa.me/" + WHATSAPP_NUMBER, "_blank", "noopener,noreferrer");
+        } else {
+          var contact = document.getElementById("contact");
+          if (contact) contact.scrollIntoView({ behavior: "smooth" });
+          chatbotClose();
+        }
+        btn.disabled = true;
+        btn.style.opacity = "0.6";
+      });
+      addNode(btn);
+    }
+
+    function clearBody() {
+      body.innerHTML = "";
+      // mensaje de bienvenida siempre presente
+      addBotMsg("¡Hola! ¿En qué puedo ayudarte hoy? 👋", "Hello! How can I help you today? 👋");
+    }
+
+    function clearTimers() {
+      timers.forEach(function (t) { clearTimeout(t); });
+      timers = [];
+      if (cycleTimer) { clearTimeout(cycleTimer); cycleTimer = null; }
+    }
+
+    function scheduleSequence() {
+      clearTimers();
+      var accumulated = 0;
+      sequence.forEach(function (step) {
+        accumulated += step.delay;
+        var t = setTimeout(function () {
+          if (!isOpen) {
+            // auto-abrir suavemente en el primer mensaje
+            if (step.delay === sequence[0].delay) {
+              chatbotOpen(true);
+            }
+          }
+          if (step.type === "bot") {
+            addBotMsg(step.es, step.en);
+          } else {
+            addOption(step.es, step.en, step.type);
+          }
+        }, accumulated);
+        timers.push(t);
+      });
+
+      // reiniciar ciclo
+      var totalDelay = accumulated + CYCLE_RESTART_DELAY;
+      cycleTimer = setTimeout(function () {
+        clearBody();
+        scheduleSequence();
+      }, totalDelay);
+    }
+
+    function chatbotOpen(auto) {
+      isOpen = true;
+      messages.hidden = false;
+      widget.classList.add("open");
+      bubble.setAttribute("aria-expanded", "true");
+    }
+
+    function chatbotClose() {
+      isOpen = false;
+      messages.hidden = true;
+      widget.classList.remove("open");
+      bubble.setAttribute("aria-expanded", "false");
+    }
+
+    window.chatbotToggle = function () {
+      if (isOpen) { chatbotClose(); } else { chatbotOpen(false); }
+    };
+
+    // Arrancar
+    scheduleSequence();
+
+    // Actualizar textos cuando cambia el idioma
+    var _origSetLang = window.setLang;
+    if (typeof _origSetLang === "function") {
+      window.setLang = function (lang) {
+        _origSetLang(lang);
+        body.querySelectorAll("[data-es][data-en]").forEach(function (el) {
+          var text = el.getAttribute("data-" + lang);
+          if (text) el.textContent = text;
+        });
+      };
+    }
+  })();
+  </script>
 </body>
 </html>
