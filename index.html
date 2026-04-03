@@ -1011,6 +1011,10 @@
     var timers   = [];
     var isOpen   = false;
     var cycleTimer = null;
+    var isFirstLoad = true;   // solo auto-abrir en la primera carga
+    var userClosed = false;   // el usuario cerró manualmente
+    var scrollReopenTimer = null;
+    var scrollWatcherActive = false;
 
     function getLang() {
       return (window.currentLang || localStorage.getItem("virexaLang") || "es");
@@ -1030,6 +1034,27 @@
       addNode(div);
     }
 
+    // Abre WhatsApp Business si está instalado, si no WhatsApp normal
+    function openWhatsAppSmart(number) {
+      var ua = navigator.userAgent;
+      var waUrl = "https://wa.me/" + number;
+
+      if (/android/i.test(ua)) {
+        // Android: intent URI intenta WhatsApp Business primero (com.whatsapp.w4b),
+        // si no está instalado cae a WhatsApp normal (com.whatsapp),
+        // si tampoco a wa.me
+        var fallbackWA = "intent://send?phone=" + number +
+          "#Intent;scheme=whatsapp;package=com.whatsapp;" +
+          "S.browser_fallback_url=" + encodeURIComponent(waUrl) + ";end";
+        window.location.href = "intent://send?phone=" + number +
+          "#Intent;scheme=whatsapp;package=com.whatsapp.w4b;" +
+          "S.browser_fallback_url=" + encodeURIComponent(fallbackWA) + ";end";
+      } else {
+        // iOS y escritorio: wa.me abre la app predeterminada (Business o normal)
+        window.open(waUrl, "_blank", "noopener,noreferrer");
+      }
+    }
+
     function addOption(es, en, type) {
       var btn = document.createElement("button");
       btn.className = "chatbot-option" + (type === "option-whatsapp" ? " whatsapp-opt" : "");
@@ -1039,7 +1064,7 @@
 
       btn.addEventListener("click", function () {
         if (type === "option-whatsapp") {
-          window.open("https://wa.me/" + WHATSAPP_NUMBER, "_blank", "noopener,noreferrer");
+          openWhatsAppSmart(WHATSAPP_NUMBER);
         } else {
           var contact = document.getElementById("contact");
           if (contact) contact.scrollIntoView({ behavior: "smooth" });
@@ -1063,17 +1088,41 @@
       if (cycleTimer) { clearTimeout(cycleTimer); cycleTimer = null; }
     }
 
+    // ===== Scroll watcher: reabre el chat si el usuario scrollea tras cerrarlo =====
+    function onScrollDetected() {
+      if (!userClosed || isOpen) return;
+      removeScrollWatcher();
+      scrollReopenTimer = setTimeout(function () {
+        if (!isOpen && userClosed) {
+          userClosed = false;
+          chatbotOpen(false);
+        }
+      }, 5000);
+    }
+
+    function addScrollWatcher() {
+      if (scrollWatcherActive) return;
+      scrollWatcherActive = true;
+      window.addEventListener("scroll", onScrollDetected, { passive: true });
+    }
+
+    function removeScrollWatcher() {
+      scrollWatcherActive = false;
+      window.removeEventListener("scroll", onScrollDetected);
+      if (scrollReopenTimer) { clearTimeout(scrollReopenTimer); scrollReopenTimer = null; }
+    }
+
     function scheduleSequence() {
       clearTimers();
       var accumulated = 0;
-      sequence.forEach(function (step) {
+      var isFirst = isFirstLoad;
+      isFirstLoad = false;
+      sequence.forEach(function (step, idx) {
         accumulated += step.delay;
         var t = setTimeout(function () {
-          if (!isOpen) {
-            // auto-abrir suavemente en el primer mensaje
-            if (step.delay === sequence[0].delay) {
-              chatbotOpen(true);
-            }
+          // Auto-abrir solo en la primera carga, en el primer mensaje
+          if (isFirst && idx === 0 && !isOpen) {
+            chatbotOpen(true);
           }
           if (step.type === "bot") {
             addBotMsg(step.es, step.en);
@@ -1084,7 +1133,7 @@
         timers.push(t);
       });
 
-      // reiniciar ciclo
+      // reiniciar ciclo (sin auto-abrir)
       var totalDelay = accumulated + CYCLE_RESTART_DELAY;
       cycleTimer = setTimeout(function () {
         clearBody();
@@ -1094,9 +1143,11 @@
 
     function chatbotOpen(auto) {
       isOpen = true;
+      userClosed = false;
       messages.hidden = false;
       widget.classList.add("open");
       bubble.setAttribute("aria-expanded", "true");
+      removeScrollWatcher();
     }
 
     function chatbotClose() {
@@ -1104,6 +1155,8 @@
       messages.hidden = true;
       widget.classList.remove("open");
       bubble.setAttribute("aria-expanded", "false");
+      userClosed = true;
+      addScrollWatcher();
     }
 
     window.chatbotToggle = function () {
