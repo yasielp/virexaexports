@@ -477,6 +477,12 @@ section {
   transform: translateY(-1px);
 }
 
+#nav-menu ul li a.nav-cta.active,
+#nav-menu ul li a.nav-cta:visited {
+  background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+  color: var(--white);
+}
+
 /* Hamburger */
 .hamburger {
   display: none;
