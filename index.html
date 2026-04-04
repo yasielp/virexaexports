@@ -1013,8 +1013,8 @@
     var cycleTimer = null;
     var isFirstLoad = true;   // solo auto-abrir en la primera carga
     var userClosed = false;   // el usuario cerró manualmente
-    var scrollReopenTimer = null;
     var scrollWatcherActive = false;
+    var midpointShown = false; // evitar reabrir repetidamente en la misma zona central
 
     function getLang() {
       return (window.currentLang || localStorage.getItem("virexaLang") || "es");
@@ -1088,28 +1088,35 @@
       if (cycleTimer) { clearTimeout(cycleTimer); cycleTimer = null; }
     }
 
-    // ===== Scroll watcher: reabre el chat si el usuario scrollea tras cerrarlo =====
-    function onScrollDetected() {
+    // ===== Scroll watcher: reabre el chat solo cuando el scroll está en el centro de la página =====
+    function onScrollCheck() {
       if (!userClosed || isOpen) return;
-      removeScrollWatcher();
-      scrollReopenTimer = setTimeout(function () {
-        if (!isOpen && userClosed) {
+      var scrollTop = window.scrollY || window.pageYOffset;
+      var scrollMax = document.documentElement.scrollHeight - window.innerHeight;
+      if (scrollMax <= 0) return;
+      var ratio = scrollTop / scrollMax;
+      // Zona central: entre 40% y 60% del scroll total
+      if (ratio >= 0.40 && ratio <= 0.60) {
+        if (!midpointShown) {
+          midpointShown = true;
           userClosed = false;
           chatbotOpen(false);
         }
-      }, 5000);
+      } else {
+        // Fuera de la zona central: resetear para permitir reabrir si vuelve al centro
+        midpointShown = false;
+      }
     }
 
     function addScrollWatcher() {
       if (scrollWatcherActive) return;
       scrollWatcherActive = true;
-      window.addEventListener("scroll", onScrollDetected, { passive: true });
+      window.addEventListener("scroll", onScrollCheck, { passive: true });
     }
 
     function removeScrollWatcher() {
       scrollWatcherActive = false;
-      window.removeEventListener("scroll", onScrollDetected);
-      if (scrollReopenTimer) { clearTimeout(scrollReopenTimer); scrollReopenTimer = null; }
+      window.removeEventListener("scroll", onScrollCheck);
     }
 
     function scheduleSequence() {
