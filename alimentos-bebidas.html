@@ -942,5 +942,69 @@
     }
   })();
   </script>
+
+  <!-- ===== LIGHTBOX ===== -->
+  <div id="lb-overlay" role="dialog" aria-modal="true" aria-label="Vista ampliada" style="
+    display:none; position:fixed; inset:0; z-index:9999;
+    background:rgba(0,0,0,.88); align-items:center; justify-content:center;
+    cursor:zoom-out;">
+    <button id="lb-close" aria-label="Cerrar" style="
+      position:absolute; top:1rem; right:1.2rem;
+      background:none; border:none; color:#fff; font-size:2rem;
+      cursor:pointer; line-height:1; padding:.2rem .5rem;">&#x2715;</button>
+    <img id="lb-img" src="" alt="" style="
+      max-width:92vw; max-height:90vh; object-fit:contain;
+      border-radius:6px; box-shadow:0 8px 40px rgba(0,0,0,.6);
+      cursor:default;" />
+  </div>
+
+  <style>
+    .prod-card-img { cursor: zoom-in; }
+    .prod-card-img img { transition: opacity .2s; }
+    .prod-card-img:hover img { opacity: .88; }
+    #lb-overlay.lb-open { display:flex !important; }
+  </style>
+
+  <script>
+  (function () {
+    var overlay = document.getElementById("lb-overlay");
+    var lbImg   = document.getElementById("lb-img");
+    var lbClose = document.getElementById("lb-close");
+
+    function openLb(src, alt) {
+      lbImg.src = src;
+      lbImg.alt = alt || "";
+      overlay.classList.add("lb-open");
+      document.body.style.overflow = "hidden";
+    }
+    function closeLb() {
+      overlay.classList.remove("lb-open");
+      lbImg.src = "";
+      document.body.style.overflow = "";
+    }
+
+    // Clic en cualquier imagen de producto
+    [].forEach.call(document.querySelectorAll(".prod-card-img"), function (wrap) {
+      wrap.addEventListener("click", function () {
+        var img = wrap.querySelector("img");
+        if (img) openLb(img.src, img.alt);
+      });
+    });
+
+    // Cerrar con botón X
+    lbClose.addEventListener("click", function (e) {
+      e.stopPropagation();
+      closeLb();
+    });
+    // Cerrar clicando el fondo
+    overlay.addEventListener("click", function (e) {
+      if (e.target === overlay) closeLb();
+    });
+    // Cerrar con Escape
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") closeLb();
+    });
+  })();
+  </script>
 </body>
 </html>
