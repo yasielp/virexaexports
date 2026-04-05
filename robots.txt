@@ -1,10 +1,5 @@
 User-agent: *
-Allow: /index.html
-Allow: /$
-Allow: /images/
-Allow: /css/
-Allow: /js/
-Allow: /assets/
+Allow: /
 Disallow: /docs/
 Disallow: /php/
 Disallow: /vendor/

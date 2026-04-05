@@ -905,10 +905,12 @@ section {
   padding: 0;
   overflow: hidden;
   transition: all var(--transition);
-  cursor: default;
+  cursor: pointer;
   outline: none;
   display: flex;
   flex-direction: column;
+  text-decoration: none;
+  color: inherit;
 }
 
 .product-image {

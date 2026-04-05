@@ -1,9 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+    xmlns:xhtml="http://www.w3.org/1999/xhtml">
+
+    <!-- Página principal -->
     <url>
         <loc>https://www.virexaexports.com/</loc>
-        <lastmod>2026-03-26</lastmod>
-        <changefreq>monthly</changefreq>
+        <lastmod>2026-04-05</lastmod>
+        <changefreq>weekly</changefreq>
         <priority>1.0</priority>
+        <xhtml:link rel="alternate" hreflang="es" href="https://www.virexaexports.com/" />
+        <xhtml:link rel="alternate" hreflang="en" href="https://www.virexaexports.com/" />
     </url>
+
+    <!-- Páginas de categoría de productos -->
+    <url>
+        <loc>https://www.virexaexports.com/alimentos-bebidas.html</loc>
+        <lastmod>2026-04-05</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+        <xhtml:link rel="alternate" hreflang="es" href="https://www.virexaexports.com/alimentos-bebidas.html" />
+        <xhtml:link rel="alternate" hreflang="en" href="https://www.virexaexports.com/alimentos-bebidas.html" />
+    </url>
+
+    <url>
+        <loc>https://www.virexaexports.com/textil.html</loc>
+        <lastmod>2026-04-05</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+        <xhtml:link rel="alternate" hreflang="es" href="https://www.virexaexports.com/textil.html" />
+        <xhtml:link rel="alternate" hreflang="en" href="https://www.virexaexports.com/textil.html" />
+    </url>
+
+    <url>
+        <loc>https://www.virexaexports.com/electrodomesticos.html</loc>
+        <lastmod>2026-04-05</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+        <xhtml:link rel="alternate" hreflang="es" href="https://www.virexaexports.com/electrodomesticos.html" />
+        <xhtml:link rel="alternate" hreflang="en" href="https://www.virexaexports.com/electrodomesticos.html" />
+    </url>
+
+    <url>
+        <loc>https://www.virexaexports.com/energias-sostenibles.html</loc>
+        <lastmod>2026-04-05</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+        <xhtml:link rel="alternate" hreflang="es" href="https://www.virexaexports.com/energias-sostenibles.html" />
+        <xhtml:link rel="alternate" hreflang="en" href="https://www.virexaexports.com/energias-sostenibles.html" />
+    </url>
+
+    <url>
+        <loc>https://www.virexaexports.com/ferreteria-seguridad.html</loc>
+        <lastmod>2026-04-05</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+        <xhtml:link rel="alternate" hreflang="es" href="https://www.virexaexports.com/ferreteria-seguridad.html" />
+        <xhtml:link rel="alternate" hreflang="en" href="https://www.virexaexports.com/ferreteria-seguridad.html" />
+    </url>
+
 </urlset>
