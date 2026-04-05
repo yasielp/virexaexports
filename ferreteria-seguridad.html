@@ -63,7 +63,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <link rel="stylesheet" href="css/styles.css?v=4" />
+  <link rel="stylesheet" href="css/styles.css?v=5" />
   <link rel="apple-touch-icon" href="assets/images/icon.jpg" />
   <meta name="theme-color" content="#1b6822" />
   <link rel="icon" type="image/jpeg" href="assets/images/icon.jpg" />
@@ -400,8 +400,12 @@
     var isOpen   = false;
 
     function getLang() {
-      return (window.currentLang || localStorage.getItem("virexaLang") || "es");
-    }
+      try {
+        return (window.currentLang || localStorage.getItem("virexaLang") || "es");
+      } catch (e) {
+        return window.currentLang || "es";
+      }
+    }}
     function addNode(node) {
       body.appendChild(node);
       body.scrollTop = body.scrollHeight;
@@ -492,7 +496,7 @@
     if (typeof _origSetLang === "function") {
       window.setLang = function (lang) {
         _origSetLang(lang);
-        body.querySelectorAll("[data-es][data-en]").forEach(function (el) {
+        [].forEach.call(body.querySelectorAll("[data-es][data-en]"),function (el) {
           var text = el.getAttribute("data-" + lang);
           if (text) el.textContent = text;
         });

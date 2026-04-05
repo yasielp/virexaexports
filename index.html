@@ -105,7 +105,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
   <!-- Styles -->
-  <link rel="stylesheet" href="css/styles.css?v=4" />
+  <link rel="stylesheet" href="css/styles.css?v=5" />
 
   <link rel="apple-touch-icon" href="assets/images/icon.jpg" />
   <meta name="theme-color" content="#1b6822" />
@@ -1036,6 +1036,16 @@
 
     var WHATSAPP_NUMBER = "34622539550";
 
+    // Detección de soporte para passive event listeners
+    var supportsPassive = false;
+    try {
+      var _testOpts = Object.defineProperty({}, "passive", {
+        get: function () { supportsPassive = true; return true; }
+      });
+      window.addEventListener("_vptest", null, _testOpts);
+      window.removeEventListener("_vptest", null, _testOpts);
+    } catch (e) {}
+
     // Secuencia de mensajes: [delaySinceLastMs, texto_es, texto_en, tipo, acción]
     // tipo: 'bot' | 'option-contact' | 'option-whatsapp' | 'option-contact'
     var sequence = [
@@ -1061,7 +1071,11 @@
     var midpointShown = false; // evitar reabrir repetidamente en la misma zona central
 
     function getLang() {
-      return (window.currentLang || localStorage.getItem("virexaLang") || "es");
+      try {
+        return (window.currentLang || localStorage.getItem("virexaLang") || "es");
+      } catch (e) {
+        return window.currentLang || "es";
+      }
     }
 
     function addNode(node) {
@@ -1111,7 +1125,14 @@
           openWhatsAppSmart(WHATSAPP_NUMBER);
         } else {
           var contact = document.getElementById("contact");
-          if (contact) contact.scrollIntoView({ behavior: "smooth" });
+          if (contact) {
+            // Fallback para Safari < 15.4 que no soporta smooth behavior
+            if ("scrollBehavior" in document.documentElement.style) {
+              contact.scrollIntoView({ behavior: "smooth" });
+            } else {
+              contact.scrollIntoView();
+            }
+          }
           chatbotClose();
         }
         btn.disabled = true;
@@ -1155,7 +1176,8 @@
     function addScrollWatcher() {
       if (scrollWatcherActive) return;
       scrollWatcherActive = true;
-      window.addEventListener("scroll", onScrollCheck, { passive: true });
+      var opts = supportsPassive ? { passive: true } : false;
+      window.addEventListener("scroll", onScrollCheck, opts);
     }
 
     function removeScrollWatcher() {
@@ -1222,7 +1244,7 @@
     if (typeof _origSetLang === "function") {
       window.setLang = function (lang) {
         _origSetLang(lang);
-        body.querySelectorAll("[data-es][data-en]").forEach(function (el) {
+        [].forEach.call(body.querySelectorAll("[data-es][data-en]"),function (el) {
           var text = el.getAttribute("data-" + lang);
           if (text) el.textContent = text;
         });
