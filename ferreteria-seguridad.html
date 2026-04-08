@@ -194,6 +194,140 @@
     transition: background .2s, color .2s;
   }
   .btn-outline-green:hover { background: #1b6822; color: #fff; }
+
+  /* ===== CATÁLOGO ===== */
+  .catalog-section {
+    padding: 5rem 0 4rem;
+    background: #f8f9f5;
+  }
+  .catalog-category {
+    margin-bottom: 3.5rem;
+  }
+  .catalog-category-header {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    margin-bottom: 1.75rem;
+    padding-bottom: .75rem;
+    border-bottom: 2px solid #e8ede9;
+  }
+  .catalog-category-header i {
+    font-size: 1.4rem;
+    color: #c9a227;
+  }
+  .catalog-category-header h3 {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: #1b2a1c;
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .catalog-category-header .cat-count {
+    margin-left: auto;
+    background: #1b6822;
+    color: #fff;
+    border-radius: 20px;
+    padding: .2rem .7rem;
+    font-size: .75rem;
+    font-weight: 700;
+  }
+  .catalog-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+  .prod-card {
+    background: #fff;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(27,104,34,0.08);
+    transition: transform .25s, box-shadow .25s;
+    display: flex;
+    flex-direction: column;
+  }
+  .prod-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 36px rgba(27,104,34,0.15);
+  }
+  .prod-card-img {
+    width: 100%;
+    aspect-ratio: 16/9;
+    overflow: hidden;
+    background: #111;
+  }
+  .prod-card-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform .4s ease;
+  }
+  .prod-card:hover .prod-card-img img {
+    transform: scale(1.04);
+  }
+  .prod-card-body {
+    padding: 1.15rem 1.25rem 1.4rem;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+  .prod-card-body h4 {
+    font-size: 1rem;
+    font-weight: 800;
+    color: #1b2a1c;
+    margin: 0 0 .35rem;
+  }
+  .prod-card-body p {
+    font-size: .85rem;
+    color: #5a6b5c;
+    margin: 0 0 1rem;
+    line-height: 1.55;
+    flex: 1;
+  }
+  .prod-card-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    font-size: .82rem;
+    font-weight: 700;
+    color: #1b6822;
+    text-decoration: none;
+    border: 1.5px solid #1b6822;
+    border-radius: 20px;
+    padding: .35rem .9rem;
+    align-self: flex-start;
+    transition: background .2s, color .2s;
+  }
+  .prod-card-cta:hover { background: #1b6822; color: #fff; }
+
+  /* ===== CTA FINAL ===== */
+  .catalog-cta {
+    text-align: center;
+    padding: 3.5rem 1.5rem;
+    background: #fff;
+    border-top: 1px solid #e8ede9;
+  }
+  .catalog-cta h3 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #1b2a1c;
+    margin-bottom: .6rem;
+  }
+  .catalog-cta p {
+    color: #5a6b5c;
+    margin-bottom: 1.75rem;
+  }
+  .catalog-cta-btns {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+  }
+
+  @media (max-width: 600px) {
+    .catalog-grid { grid-template-columns: 1fr; }
+  }
   </style>
 </head>
 <body>
@@ -270,25 +404,74 @@
     </div>
   </section>
 
-  <!-- ===== COMING SOON ===== -->
-  <section class="coming-soon-section">
+  <!-- ===== CATÁLOGO DE PRODUCTOS ===== -->
+  <section class="catalog-section">
     <div class="container">
-      <div class="coming-soon-card">
-        <div class="coming-soon-icon">
-          <i class="fa-solid fa-screwdriver-wrench"></i>
-        </div>
-        <h2 data-es="Próximamente" data-en="Coming Soon">Próximamente</h2>
-        <p data-es="Estamos preparando el catálogo de productos de esta categoría. Pronto encontrarás aquí todos los productos de Ferretería y Seguridad disponibles para importación y distribución internacional." data-en="We are preparing the product catalog for this category. Soon you will find here all Hardware &amp; Security products available for import and international distribution.">
-          Estamos preparando el catálogo de productos de esta categoría. Pronto encontrarás aquí todos los productos de Ferretería y Seguridad disponibles para importación y distribución internacional.
+
+      <!-- Encabezado de sección -->
+      <div style="text-align:center; margin-bottom:3rem;">
+        <span class="section-label" data-es="Catálogo" data-en="Catalog">Catálogo</span>
+        <h2 style="font-size:clamp(1.8rem,4vw,2.8rem); font-weight:800; color:#1b2a1c; margin:.5rem 0 1rem;"
+            data-es="Nuestros Productos" data-en="Our Products">Nuestros Productos</h2>
+        <p style="max-width:580px; margin:0 auto; color:#5a6b5c; line-height:1.7;"
+           data-es="Selección de productos disponibles para importación y distribución internacional. Contáctanos para solicitar cotización o más información."
+           data-en="Selection of products available for import and international distribution. Contact us for a quote or more information.">
+          Selección de productos disponibles para importación y distribución internacional. Contáctanos para solicitar cotización o más información.
         </p>
-        <div class="coming-soon-actions">
-          <a href="index.html#products" class="btn-outline-green" data-es="Ver otras categorías" data-en="View other categories">
-            <i class="fa-solid fa-table-cells"></i> Ver otras categorías
-          </a>
-          <a href="index.html#contact" class="btn btn-gold" data-es="Solicitar información" data-en="Request information">
-            <i class="fa-solid fa-envelope"></i> Solicitar información
-          </a>
+      </div>
+
+      <!-- ── Categoría: Seguridad Perimetral ── -->
+      <div class="catalog-category">
+        <div class="catalog-category-header">
+          <i class="fa-solid fa-shield-halved"></i>
+          <h3 data-es="Seguridad Perimetral" data-en="Perimeter Security">Seguridad Perimetral</h3>
+          <span class="cat-count">1</span>
         </div>
+        <div class="catalog-grid" style="max-width:380px;">
+          <!-- Puertas Seccionales -->
+          <div class="prod-card">
+            <div class="prod-card-img">
+              <picture>
+                <source srcset="assets/images/ferreteria-seguridad/ferreteria-doors.webp" type="image/webp">
+                <img src="assets/images/ferreteria-seguridad/ferreteria-doors.webp"
+                     alt="Puertas seccionales de garaje — Virexa Exports"
+                     loading="lazy" width="1280" height="720">
+              </picture>
+            </div>
+            <div class="prod-card-body">
+              <h4 data-es="Puertas Seccionales de Garaje" data-en="Sectional Garage Doors">Puertas Seccionales de Garaje</h4>
+              <p data-es="Mecanismos reforzados, aislamiento térmico y acústico, y automatización inteligente. Apertura vertical para optimizar el espacio. Disponibles para importación mayorista."
+                 data-en="Reinforced mechanisms, thermal and acoustic insulation, and smart automation. Vertical opening to optimise space. Available for wholesale import.">
+                Mecanismos reforzados, aislamiento térmico y acústico, y automatización inteligente. Apertura vertical para optimizar el espacio. Disponibles para importación mayorista.
+              </p>
+              <a href="index.html#contact" class="prod-card-cta"
+                 data-es="Solicitar cotización" data-en="Request a quote">
+                <i class="fa-solid fa-paper-plane"></i> Solicitar cotización
+              </a>
+            </div>
+          </div>
+        </div>
+      </div><!-- /Seguridad Perimetral -->
+
+    </div>
+
+    <div class="catalog-cta">
+      <h3 data-es="¿Interesado en alguno de estos productos?" data-en="Interested in any of these products?">
+        ¿Interesado en alguno de estos productos?
+      </h3>
+      <p data-es="Contáctanos para recibir una cotización personalizada, información de precios por volumen o condiciones de envío."
+         data-en="Contact us for a personalised quote, volume pricing information or shipping terms.">
+        Contáctanos para recibir una cotización personalizada, información de precios por volumen o condiciones de envío.
+      </p>
+      <div class="catalog-cta-btns">
+        <a href="index.html#products" class="btn-outline-green"
+           data-es="Ver otras categorías" data-en="View other categories">
+          <i class="fa-solid fa-table-cells"></i> Ver otras categorías
+        </a>
+        <a href="index.html#contact" class="btn btn-gold"
+           data-es="Solicitar cotización" data-en="Request a quote">
+          <i class="fa-solid fa-envelope"></i> Solicitar cotización
+        </a>
       </div>
     </div>
   </section>
@@ -504,5 +687,8 @@
     }
   })();
   </script>
+
+  <!-- ===== LIGHTBOX (componente compartido) ===== -->
+  <script src="js/product-lightbox.js"></script>
 </body>
 </html>
