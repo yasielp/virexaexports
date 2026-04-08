@@ -2,3 +2,6 @@ vendor/
 composer.lock
 .DS_Store
 .env
+firma_correo_virexa.html
+.venv/
+.vscode/
